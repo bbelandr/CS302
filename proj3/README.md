@@ -53,12 +53,30 @@ sets that could be scored on the board. The sets that could be scored are only r
 when printed, but the actual board could have multiple scoring tiles that would be able to also
 be used.
 
-Here is some sample output:
+Given this input from standard in:
+```
+yyggyryybp
+ggrgpyppyp
+RBgggyrpPP
+GGgggybpPP
+RGygryrpBP
+YGyygyypYB
+yyybpbyppb
+ppggyypbbb
+
+```
+
+Here is its output:
 ```
 Scoring sets:
-  Size: 10  Char: p  Scoring Cell: 2,8
-  Size:  6  Char: g  Scoring Cell: 3,0
+  Size: 14  Char: g  Scoring Cell: 5,1
+  Size: 15  Char: p  Scoring Cell: 4,9
+  Size:  7  Char: y  Scoring Cell: 5,0
+  Size:  5  Char: b  Scoring Cell: 5,9
 ```
+
+Note how g had multiple scoring tiles but was only referenced once. The tile that is referenced
+is the head of the disjoint set.
 
 ### Sb-play
 
