@@ -35,6 +35,15 @@ Sum of their values:            33
 ```
 board[i * c + j]
 ```
+  * the locations of all of the goal cells (goal)
+    * These are indexed in the same way that board is
+  * the values of all the colors (colors)
+    * Indexed with the ascii value of the letter
+    * The value is the value of the letter in points
+```
+In a standard pbyrg format,
+colors['p'] == 2
+```
 ### Sb-analyze
 Sb-analyze is made with sb-read as a base.
 
