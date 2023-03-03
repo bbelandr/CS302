@@ -26,6 +26,9 @@ Non-Empty cells:                60
 Number of pieces in goal cells:  8
 Sum of their values:            33
 ```
+#### Variables to Know
+  Sb-read takes in information and stores the minimum score size (mss), the number of empty
+  cells in the board (empty), a board 
 
 ### Sb-analyze
 Sb-analyze is made with sb-read as a base.
