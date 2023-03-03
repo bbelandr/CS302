@@ -48,6 +48,18 @@ colors['p'] == 2
 ### Sb-analyze
 Sb-analyze is made with sb-read as a base.
 
+While sb-read would print out the general facts of the input, sb-analyze would print out the 
+sets that could be scored on the board. The sets that could be scored are only represented once
+when printed, but the actual board could have multiple scoring tiles that would be able to also
+be used.
+
+Here is some sample output:
+```
+Scoring sets:
+  Size: 10  Char: p  Scoring Cell: 2,8
+  Size:  6  Char: g  Scoring Cell: 3,0
+```
+
 ### Sb-play
 
 ## How SuperBall works:
