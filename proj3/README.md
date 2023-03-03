@@ -10,7 +10,7 @@ All the code that was written for this assignment is within /src/.
   - Yellow = 4
   - Red = 5
   - Green = 6
-  - 
+  
 A command to run a game of superball would use the colors pbyrg, which represents the colors in increasing order by points.
 ### The actual run command looks like this:
   - 8 10 5 pbyrg
