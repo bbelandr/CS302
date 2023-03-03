@@ -27,9 +27,14 @@ Number of pieces in goal cells:  8
 Sum of their values:            33
 ```
 #### Variables to Know
-  Sb-read takes in information and stores the minimum score size (mss), the number of empty
-  cells in the board (empty), a board 
-
+  Sb-read takes in information and stores these things into the Superball class:
+  * the minimum score size (mss)
+  * the number of empty cells in the board (empty)
+  * the superball board stored in a 1 dimentional vector (board)
+    * In order to access an element in location (i, j), you must index 
+```
+board[i * c + j]
+```
 ### Sb-analyze
 Sb-analyze is made with sb-read as a base.
 
