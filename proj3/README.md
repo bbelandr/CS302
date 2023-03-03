@@ -80,6 +80,30 @@ Note how g had multiple scoring tiles but was only referenced once. The tile tha
 is the head of the disjoint set.
 
 ### Sb-play
+Sb-play outputs an actual move that it reccommends the player to do in the next turn.
+
+It's important to note that in order for the game to end, sb-play must make a final swap.
+It's like a mandatory final (and bad) move that ends the game.
+
+#### Testing sb-play
+In order to test sb-play on an actual game, you have to run sb-player. sb-player will provide
+sb-play with a board and ask it for the next move to make. 
+
+##### Arguments for sb-play
+Sb-play takes in arguments that are slightly different from the normal sb-player. All you have to know
+is that you need to pass it a program to play the game with. Here's the code that runs sb-player with sb-play:
+
+```
+./sb-player 8 10 5 pbyrg ./bin/sb-play n y -
+```
+The final four arguments for sb-player are these:
+* the program to play the game with
+* whether or not the program can be interacted with by the user
+  * If this is set to true, the user and the program can take turns making moves on the game board
+* whether or not the program should print the board
+  * If this is set to false, the program will only print the final score and nothing else.
+* a seed to make the board from
+
 
 ## How SuperBall works:
 ### A typical game of SuperBall has 5 colors, all worth different amounts of points:
