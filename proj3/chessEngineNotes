@@ -1,0 +1,8 @@
+Benjamin Belandres
+
+
+W H A T   T H I S   I S
+This is an analysis of how the popular chess engine Stockfish, and as an extent any chess classic chess engine, goes about analyzing a position in chess.
+The goal of this analysis is to be able to adapt how Stockfish analyzes a position in chess to a game of Superball (part of CS302 project 3).
+
+H O W   I T   W O R K S

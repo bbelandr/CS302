@@ -1,0 +1,3 @@
+[submodule "proj3/bin/plank-disjoint-sets"]
+	path = proj3/bin/plank-disjoint-sets
+	url = https://bitbucket.org/jimplank/plank-disjoint-sets.git
