@@ -2,6 +2,7 @@
 
 ## About this Repository
 All the code that was written for this assignment is within /src/. 
+The important files are sb-read, sb-analyze, and sb-play.
 
 ### Sb-read
 This code was written for me, but it is still very useful. Sb-read takes in a file 
