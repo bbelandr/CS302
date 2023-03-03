@@ -53,6 +53,7 @@ sets that could be scored on the board. The sets that could be scored are only r
 when printed, but the actual board could have multiple scoring tiles that would be able to also
 be used.
 
+#### Example:
 Given this input from standard in:
 ```
 yyggyryybp
