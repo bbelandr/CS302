@@ -104,7 +104,6 @@ The final four arguments for sb-player are these:
   * If this is set to false, the program will only print the final score and nothing else.
 * a seed to make the board from
 
-
 ## How SuperBall works:
 ### A typical game of SuperBall has 5 colors, all worth different amounts of points:
   - Purple = 2
@@ -122,3 +121,29 @@ A command to run a game of superball would use the colors pbyrg, which represent
     - 5 is the minmum amount of connections to score a group
     - pbyrg is the colors in increasing order
 
+# This is the Disjoint Sets
+While Disjoint Sets already has documentation, I'm just going to summarize 
+how Plank's disjoint sets work here.
+
+## How the Methods work
+This is just a brief summary based off of Plank's disjoint_set.hpp file
+
+### int Union(int s1, int s2)
+Union takes two set id's and puts them together through union by rank with path compression.
+* The set id's are integers that represent different disjoint sets
+
+Once finished, Union() returns the set id of the new union.
+
+### int Find(int element)
+Returns the set id of the element
+
+### Print()
+Prints all the information
+
+
+## Run times
+* Initialize is O(n)
+* Union is O(1)
+* Find is O(alpha(n)), which is basically O(1)
+* Print is O(n)
+* Print_Equiv is O(n * log(n))
