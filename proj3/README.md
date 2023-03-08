@@ -112,7 +112,8 @@ The final four arguments for sb-player are these:
   - Red = 5
   - Green = 6
   
-A command to run a game of superball would use the colors pbyrg, which represents the colors in increasing order by points.
+A command to run a game of superball would use the colors pbyrg, which represents the colors 
+in increasing order by points.
 ### The actual run command looks like this:
   - 8 10 5 pbyrg
   #### Where:
@@ -125,20 +126,74 @@ A command to run a game of superball would use the colors pbyrg, which represent
 While Disjoint Sets already has documentation, I'm just going to summarize 
 how Plank's disjoint sets work here.
 
+## The structure of Plank's Disjoint Sets
+When you create a new disjoint set, 
+
 ## How the Methods work
 This is just a brief summary based off of Plank's disjoint_set.hpp file
 
+### void Initialize(int nelements)
+Initialize takes in the amount of new elements to create in a set and then clears everything else. 
+To be clear, Initialize clears every single set from the data structure before adding the new elements and sets.
+
 ### int Union(int s1, int s2)
 Union takes two set id's and puts them together through union by rank with path compression.
-* The set id's are integers that represent different disjoint sets
+* The set id's are integers that represent different disjoint sets in the program.
 
 Once finished, Union() returns the set id of the new union.
 
 ### int Find(int element)
-Returns the set id of the element
+Returns the set id of the set that contains the element.
+
+Considering this arrangement of sets:
+```
+{4,2}{3,0,1}
+```
+The last value in both of these sets is considered the "leader" of the disjoint set, which holds the set ID. 
+
+* Calling Find(3) will return 1, since 3 is part of the disjoint set that has 1 as the leader.
+* Calling Find(0) will also return 1 for the same reasons as Find(3).
+* Calling Find(2) will return 2, since 2 is the leader of its own set.
 
 ### Print()
-Prints all the information
+Prints all the information in this form:
+
+```
+Node:    0  1  2  3  4
+Links:  -1 -1 -1 -1 -1
+Ranks:   1  1  1  1  1
+Sizes:   1  1  1  1  1
+Set IDs: {0,1,2,3,4}
+Sets: {0}{1}{2}{3}{4}
+```
+
+This is an example of a disjoint set datastructure that has been initialized with 5 sets.
+
+After calling Union(0, 1), you get this:
+
+```
+Node:    0  1  2  3  4
+Links:   1 -1 -1 -1 -1
+Ranks:      2  1  1  1
+Sizes:      2  1  1  1
+Set IDs: {4,1,2,3}
+Sets: {4}{0,1}{2}{3}
+```
+
+### Print_Equiv()
+Plank's description says "Print the equicvalence classes." All that you need to know is that this function prints all of the present sets in a sorted order based on the smallest element of each set.
+
+As per the previous example where I called union on set 0 and 1, this is what it would look like if I then called the Print_Equiv() function:
+
+```
+{0,1},{2},{3},{4}
+```
+
+After calling Union(1, 3) and Union(2, 4), this is what the output would look like:
+
+```
+{0,1,3},{2,4}
+```
 
 
 ## Run times
