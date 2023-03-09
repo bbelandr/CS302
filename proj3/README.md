@@ -5,7 +5,7 @@ All the code that was written for this assignment is within /src/.
 The important files are sb-read, sb-analyze, and sb-play.
 
 ### Sb-read
-This code was written for me, but it is still very useful. Sb-read takes in a file 
+This code was pre-written, but it is still very useful to understand. Sb-read takes in a file 
 that looks like this:
 
 ```
@@ -40,7 +40,7 @@ board[i * c + j]
     * These are indexed in the same way that board is
   * the values of all the colors (colors)
     * Indexed with the ascii value of the letter
-    * The value is the value of the letter in points
+    * Returns the value of the letter in points
 ```
 In a standard pbyrg format,
 colors['p'] == 2
@@ -194,6 +194,11 @@ After calling Union(1, 3) and Union(2, 4), this is what the output would look li
 ```
 {0,1,3},{2,4}
 ```
+
+### The const vector<int> * methods
+There isn't much to say about what these functions do because they all are straightforward. Just be careful that when you index any vector that you get from these pointers, you index with vector::at(), and not the subscript operator [].
+
+You apparently cannot index something that is a const pointer to an array with the subscript operator. Just deal with it.
 
 
 ## Run times

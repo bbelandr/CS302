@@ -100,6 +100,9 @@ int main(int argc, char **argv)
   
   d.Initialize(5);
   const vector<int> *stuff = d.Get_Set_Ids();
+  for (int i = 0; i < 5; i++) {
+    cout << stuff->at(i);
+  }
 
   d.Print();
   d.Union(0, 1);
@@ -111,6 +114,16 @@ int main(int argc, char **argv)
   d.Print_Equiv();
 
   cout << d.Find(0) << endl;
+  cout << d.Get_Sizes()->at(1) << endl;
+
+  vector<int> myVector;
+  myVector.push_back(3);
+  myVector.push_back(4);
+  myVector.push_back(1);
+
+  const vector<int> constVector = myVector;
+
+  cout << constVector[1] << endl;
 
   exit(0);
 }
