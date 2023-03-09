@@ -1,3 +1,5 @@
+#inlcude "disjoint_set.hpp"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>

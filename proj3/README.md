@@ -36,7 +36,7 @@ Sum of their values:            33
 ```
 board[i * c + j]
 ```
-  * the locations of all of the goal cells (goal)
+  * the locations of all of the goal cells (goals)
     * These are indexed in the same way that board is
   * the values of all the colors (colors)
     * Indexed with the ascii value of the letter
@@ -127,7 +127,7 @@ Here is what the typical board looks like:
 ```
 If I were to index (0,1), I would get the r at the top left. Notice how the indexing works; the first value controls the row, and the second value controls the column.
 
-DO NOT THINK OF THE ORDERED PAIR AS (X, Y). The pairs are formatted as (row, colunmn).
+DO NOT THINK OF THE ORDERED PAIR AS (X, Y). The pairs are formatted as (row, column).
 ### A typical game of SuperBall has 5 colors, all worth different amounts of points:
   - Purple = 2
   - Blue = 3
