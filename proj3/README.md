@@ -85,6 +85,11 @@ Sb-play outputs an actual move that it reccommends the player to do in the next 
 It's important to note that in order for the game to end, sb-play must make a final swap.
 It's like a mandatory final (and bad) move that ends the game.
 
+Here's what sb-play should look like:
+```
+
+```
+
 #### Testing sb-play
 In order to test sb-play on an actual game, you have to run sb-player. sb-player will provide
 sb-play with a board and ask it for the next move to make. 
@@ -105,6 +110,24 @@ The final four arguments for sb-player are these:
 * a seed to make the board from
 
 ## How SuperBall works:
+### The Board
+Here is what the typical board looks like:
+
+```
+  0123456789
+0 .r........
+1 ..........
+2 **g....b**
+3 **....b.**
+4 **.g....*Y
+5 **......*P
+6 .....rr...
+7 ..b.......
+
+```
+If I were to index (0,1), I would get the r at the top left. Notice how the indexing works; the first value controls the row, and the second value controls the column.
+
+DO NOT THINK OF THE ORDERED PAIR AS (X, Y). The pairs are formatted as (row, colunmn).
 ### A typical game of SuperBall has 5 colors, all worth different amounts of points:
   - Purple = 2
   - Blue = 3

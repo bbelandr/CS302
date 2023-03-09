@@ -1,4 +1,5 @@
 // Benjamin Belandres, sb-analyze.cpp
+// REMEMBER TO MAKE D PRIVATE AGAIN
 
 
 #include "disjoint_set.hpp"
@@ -7,8 +8,13 @@ using namespace std;
 using plank::Disjoint_Set;
 
 class Superball {
+  private:
+    bool DEBUG = false;
   public:
+    Disjoint_Set d;
     Superball(int argc, char **argv); // Populates the variables below with information from the commandline
+    const Disjoint_Set Analyze(int mRow = 0, int mCol = 0);     // Custom function that returns a Disjoint Set structure which combines all similar colors together.
+                                                          // Since Analyze has default values, you don't need to input parameters when you call Analyze() 
     int r;                // The amount of rows
     int c;                // The amount of columns
     int mss;              // The minimum score size
@@ -73,57 +79,85 @@ Superball::Superball(int argc, char **argv)
       }
     }
   }
+
+  d.Initialize(r*c);    // Representing the whole board as a disjoint set
+}
+
+const Disjoint_Set Superball::Analyze(int mRow, int mCol) 
+{
+  int currentSpace = mRow * c + mCol;
+  int nextSpace;
+  char currentColor = board[currentSpace];
+  char nextColor;
+  
+
+  if (mCol < c - 1) { // Moving right on the board
+    nextSpace = mRow * c + (mCol + 1);
+    nextColor = board[nextSpace];
+
+    if (currentColor != '.' && currentColor == nextColor) {
+
+      int currentSet, nextSet;
+      currentSet = d.Find(currentSpace);
+      nextSet = d.Find(nextSpace);
+
+      if (currentSet != nextSet) {  // Gotta make sure that these two are different sets, otherwise we would be unioning the same set with itself (don't do that)
+        if (DEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
+        if (DEBUG) d.Print();
+
+        d.Union(d.Find((currentSpace)), d.Find((nextSpace)));
+      }
+    }
+
+    if (DEBUG) cout << "(>)Analyzing (" << mRow << ", " << mCol + 1 << "). . .\n";  // Notice how the arrow is saying which way the program is going
+    Analyze(mRow, mCol + 1);
+  }
+
+  if (mRow < r - 1) { // Moving down on the board
+    nextSpace = (mRow + 1) * c + mCol;
+    nextColor = board[nextSpace];
+
+    if (currentColor != '.' && currentColor == nextColor) {
+      int currentSet, nextSet;
+      currentSet = d.Find(currentSpace);
+      nextSet = d.Find(nextSpace);
+
+      if (currentSet != nextSet) {  // Gotta make sure that these two are different sets, otherwise we would be unioning the same set with itself (don't do that)
+        if (DEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
+        if (DEBUG) d.Print();
+
+        d.Union(d.Find((currentSpace)), d.Find((nextSpace)));
+      }
+    }
+    
+    if (DEBUG) cout << "(V)Analyzing (" << mRow + 1 << ", " << mCol << "). . .\n";
+    Analyze(mRow + 1, mCol);
+  }
+  return d;
 }
 
 
 int main(int argc, char **argv)
 {
-  Disjoint_Set d;
-  // Superball *s;
-  // int i, j;
-  // int ngoal;  // The number of pieces in goal cells
-  // int tgoal;  // The sum of the values
+  Superball *s;
+  int i, j;
+  int ngoal;  // The number of pieces in goal cells
+  int tgoal;  // The sum of the values
  
-  // s = new Superball(argc, argv);
+  s = new Superball(argc, argv);
 
-  // tgoal = 0;
-  // ngoal = 0;
-  // for (i = 0; i < s->r*s->c; i++) {
-  //   if (s->goals[i] && s->board[i] != '*') {
-  //     tgoal += s->colors[s->board[i]];
-  //     ngoal++;
-  //   }
-  // }
-
-  // (void) d;
-  // cout << "This program doesn't do anything yet.\n";
-  
-  d.Initialize(5);
-  const vector<int> *stuff = d.Get_Set_Ids();
-  for (int i = 0; i < 5; i++) {
-    cout << stuff->at(i);
+  tgoal = 0;
+  ngoal = 0;
+  for (i = 0; i < s->r*s->c; i++) {
+    if (s->goals[i] && s->board[i] != '*') {
+      tgoal += s->colors[s->board[i]];
+      ngoal++;
+    }
   }
 
-  d.Print();
-  d.Union(0, 1);
-  d.Print();
-  d.Print_Equiv();
-  d.Union(1, 3);
-  d.Union(4, 2);
-  d.Print();
-  d.Print_Equiv();
-
-  cout << d.Find(0) << endl;
-  cout << d.Get_Sizes()->at(1) << endl;
-
-  vector<int> myVector;
-  myVector.push_back(3);
-  myVector.push_back(4);
-  myVector.push_back(1);
-
-  const vector<int> constVector = myVector;
-
-  cout << constVector[1] << endl;
+  // cout << "This program doesn't do anything yet.\n";
+  
+  s->Analyze().Print_Equiv();
 
   exit(0);
 }
