@@ -1,5 +1,4 @@
 // Benjamin Belandres, sb-analyze.cpp
-// REMEMBER TO MAKE D PRIVATE AGAIN
 
 
 #include "disjoint_set.hpp"
@@ -9,7 +8,7 @@ using plank::Disjoint_Set;
 
 class Superball {
   private:
-    bool DEBUG = true;
+    bool DEBUG = false;
   public:
     Disjoint_Set d;
     Superball(int argc, char **argv); // Populates the variables below with information from the commandline
@@ -203,7 +202,7 @@ int main(int argc, char **argv)
   }
 
   
-  s->ConstructDisjointsets().Print();
+  s->ConstructDisjointsets();
   s->takenPaths.clear();  // Just to make sure that if I want to use ConstructDisjointsets() again, takenPaths is clean.
   s->FindScoringCells();
 
