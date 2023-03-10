@@ -4,19 +4,24 @@
 
 #include "disjoint_set.hpp"
 #include <iostream>
+#include <cmath>
 using namespace std;
 using plank::Disjoint_Set;
 
 class Superball {
   private:
-    bool DEBUG = false;
+    bool DEBUG = true;
   public:
     Disjoint_Set d;
     Superball(int argc, char **argv); // Populates the variables below with information from the commandline
-    const Disjoint_Set ConstructDisjointsets(int mRow = 0, int mCol = 0);     // Custom function that returns a Disjoint Set structure which combines all similar colors together.
+    // ~Superball();                     // Deletes d
+    const Disjoint_Set ConstructDisjointsets(Disjoint_Set &mySet, vector<int> mBoard, int mRow = 0, int mCol = 0);     // Custom function that returns a Disjoint Set structure which combines all similar colors together.
                                                                               // Since ConstructDisjointsets has default values, you don't need to input parameters when you call ConstructDisjointsets() 
-    void FindScoringCells();       // Calls ConstructDisjointsets and also populates the scoringCells
+    void FindScoringCells();                    // Calls ConstructDisjointsets and also populates the scoringCells
     double ClosestColor(int cell, char color);  // Takes the cell from the parameter and returns the distance to the closest matching color from the color argument
+    double EvaluateBoard();                     // Returns a score for a given boardstate (assumes the normal board if nothing is passed to it)
+    double EvaluateBoard(vector<int> mBoard);   // Overload so that you can pass whatever board you want to it
+    void printBoard(vector<int> mBoard);        // Prints the current board 
     int r;                // The amount of rows
     int c;                // The amount of columns
     int mss;              // The minimum score size
@@ -90,64 +95,74 @@ Superball::Superball(int argc, char **argv)
   
 }
 
-const Disjoint_Set Superball::ConstructDisjointsets(int mRow, int mCol) 
+// Superball::~Superball() {
+//   delete d;
+// }
+
+const Disjoint_Set Superball::ConstructDisjointsets(Disjoint_Set &mySet, vector<int> mBoard, int mRow, int mCol) 
 {
+  bool mDEBUG = true;
   int currentSpace = mRow * c + mCol;
   int nextSpace;
-  char currentColor = board[currentSpace];
+  char currentColor = mBoard[currentSpace];
   char nextColor;
 
-  if (mCol < c - 1 && takenPaths[currentSpace].first == false) { // Moving right on the board when not on the edge or the path hasn't been taken yet
+  // if (mDEBUG) cout << "ConstructDisjointsets just recieved this board: " << endl;
+  // if (mDEBUG) printBoard(mBoard);
+
+  if (mCol < c - 1 && takenPaths[currentSpace].first == false) { // Moving right on the mBoard when not on the edge or the path hasn't been taken yet
+    // if (mDEBUG) cout << "chicken\n";
     takenPaths[currentSpace].first = true;  // Making sure that we never take this path again
 
     nextSpace = mRow * c + (mCol + 1);
-    nextColor = board[nextSpace];
+    nextColor = mBoard[nextSpace];
 
     if (currentColor != '.' && currentColor != '*' && currentColor == nextColor) {
 
       int currentSet, nextSet;
-      currentSet = d.Find(currentSpace);
-      nextSet = d.Find(nextSpace);
+      currentSet = mySet.Find(currentSpace);
+      nextSet = mySet.Find(nextSpace);
 
       if (currentSet != nextSet) {  // Gotta make sure that these two are different sets, otherwise we would be unioning the same set with itself (don't do that)
-        if (DEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
-        if (DEBUG) d.Print();
+        if (mDEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
+        mySet.Union(mySet.Find((currentSpace)), mySet.Find((nextSpace)));
 
-        d.Union(d.Find((currentSpace)), d.Find((nextSpace)));
+        if (mDEBUG) mySet.Print();
       }
     }
 
-    if (DEBUG) cout << "(>)Analyzing (" << mRow << ", " << mCol + 1 << "). . .\n";  // Notice how the arrow is saying which way the program is going
-    ConstructDisjointsets(mRow, mCol + 1);
+    if (mDEBUG) cout << "(>)Analyzing (" << mRow << ", " << mCol + 1 << "). . .\n";  // Notice how the arrow is saying which way the program is going
+    ConstructDisjointsets(mySet, mBoard, mRow, mCol + 1);
   }
 
-  if (mRow < r - 1 && takenPaths[currentSpace].second == false) { // Moving down on the board
+  if (mRow < r - 1 && takenPaths[currentSpace].second == false) { // Moving down on the mBoard
     takenPaths[currentSpace].second = true;  // Making sure that we never take this path again
     
     
     nextSpace = (mRow + 1) * c + mCol;
-    nextColor = board[nextSpace];
+    nextColor = mBoard[nextSpace];
 
     if (currentColor != '.' && currentColor != '*' && currentColor == nextColor) {
       int currentSet, nextSet;
-      currentSet = d.Find(currentSpace);
-      nextSet = d.Find(nextSpace);
+      currentSet = mySet.Find(currentSpace);
+      nextSet = mySet.Find(nextSpace);
 
       if (currentSet != nextSet) {  // Gotta make sure that these two are different sets, otherwise we would be unioning the same set with itself (don't do that)
-        if (DEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
-        if (DEBUG) d.Print();
+        if (mDEBUG) cout << "  " << currentColor << " == " << nextColor << ", so Unioning (" << mRow << ", " << mCol << ") with (" << mRow << ", " << mCol + 1 << ")\n";
+        mySet.Union(mySet.Find((currentSpace)), mySet.Find((nextSpace)));
 
-        d.Union(d.Find((currentSpace)), d.Find((nextSpace)));
+        if (mDEBUG) mySet.Print();
       }
     }
     
-    if (DEBUG) cout << "(V)Analyzing (" << mRow + 1 << ", " << mCol << "). . .\n";
-    ConstructDisjointsets(mRow + 1, mCol);
+    if (mDEBUG) cout << "(V)Analyzing (" << mRow + 1 << ", " << mCol << "). . .\n";
+    ConstructDisjointsets(mySet, mBoard, mRow + 1, mCol);
   }
-  return d;
+  return mySet;
 }
 
 void Superball::FindScoringCells() {
+  bool mDEBUG = false;
   const vector<int> *sizes = d.Get_Sizes();
   const vector<int> *setIds = d.Get_Set_Ids();
 
@@ -161,17 +176,17 @@ void Superball::FindScoringCells() {
     row = currentCell / c;
     col = currentCell % c;
 
-    if (DEBUG) cout << "Searching (" << row << ", " << col << ") == " << sizes->at(currentCell) << " and comparing with " << mss << ". . . \n";
+    if (mDEBUG) cout << "Searching (" << row << ", " << col << ") == " << sizes->at(currentCell) << " and comparing with " << mss << ". . . \n";
     if (board[currentCell] != '.' && board[currentCell] != '*' && sizes->at(currentCell) >= mss) {  // This means that the given set is able to be scored if one of the elements is in the goal
-      if (DEBUG) cout << "  A scoring set was found at (" << row << ", " << col << ")\n";
+      if (mDEBUG) cout << "  A scoring set was found at (" << row << ", " << col << ")\n";
       
       // Looking for a goal element
-      if (DEBUG) cout << "    Looking for goal elements. . .\n";
+      if (mDEBUG) cout << "    Looking for goal elements. . .\n";
       list<int> elements = d.Get_Elements()->at(currentCell);
       for (list<int>::iterator it = elements.begin(); it != elements.end(); it++) {
-        if (DEBUG) cout << "      Searching " << *it << ".\n";
+        if (mDEBUG) cout << "      Searching " << *it << ".\n";
         if (goals[*it]) { // We have found an element that is at a goal cell
-          if (DEBUG) cout << "      Found a goal cell. Pushing back " << *it << ".\n";
+          if (mDEBUG) cout << "      Found a goal cell. Pushing back " << *it << ".\n";
           scoringCells.push_back(*it);
           break;
         }
@@ -182,12 +197,142 @@ void Superball::FindScoringCells() {
 }
 
 double Superball::ClosestColor(int cell, char color) {
+  int targetRow = cell / c; 
+  int targetCol = cell % c;
+  
+  int currentRow, currentCol;
+  int closestCell; 
+  double smallestDistance = __DBL_MAX__;
+  for (int currentCell = 0; currentCell < r * c; currentCell++) {
+    currentRow = currentCell / c;
+    currentCol = currentCell % c;
+
+    if (board[currentCell] == color) {
+      double currentDistance = sqrt(pow(currentRow - targetRow, 2) + pow(currentCol - targetCol, 2));
+      if (smallestDistance > currentDistance) {
+        if (DEBUG) printf("New smallest distance, %f, from (%d, %d) found at (%d, %d)\n", currentDistance, targetRow, targetCol, currentRow, currentCol);
+        smallestDistance = currentDistance;
+        closestCell = currentCell;
+      }
+    }
+
+
+  }
+  return smallestDistance;
+}
+
+double Superball::EvaluateBoard() {
+  return EvaluateBoard(board);
+}
+
+double Superball::EvaluateBoard(vector<int> mBoard) {
+  // Parameter List
+  double WEIGHT_FOR_SET_IN_GOAL = 2;
+
+  // Collecting information on the position
+
+
+  if (1) {
+    cout << "Here is the board:" << endl;
+    printBoard(mBoard);
+  }
+
+  takenPaths.clear();       // Clearing and remaking takenPaths to be reused by ConstructDisjointsets()
+  takenPaths.resize(r*c);
+  Disjoint_Set newSet;      // Making a disjoint set to pass to ConstructDisjointsets() 
+  newSet.Initialize(r*c);
+  
+  newSet = ConstructDisjointsets(newSet, mBoard); 
+
+  if (DEBUG) cout << "Here's newSet in Evaluate: " << endl;
+  if (DEBUG) newSet.Print();
+
+  FindScoringCells();
+
+
+
+  // // Evaluating
+  // double score = 0;
+  // const vector<int> *sizes = d->Get_Sizes();
+  // int valOfColor;
+  // const vector<int> *setIds = d->Get_Set_Ids();
+  // int currentSet;
+
+  // for (size_t i = 0; i < setIds->size(); i++) {
+  //   currentSet = setIds->at(i);
+  //   if (mBoard[currentSet] == '.' || mBoard[currentSet] == '*') { // Skipping any of the empty sets
+  //     continue;
+  //   }
+  //   valOfColor = colors[mBoard[currentSet]];
+    
+  //   if (DEBUG) printf("Evaluating the %c (value %d) set ID %d-> . .\n", mBoard[currentSet], valOfColor, currentSet);
+    
+  //   double setEvaluation = pow( (sizes->at(currentSet)) * valOfColor, 2);  // Adding ((size-1) * colorVal)^1.1 to the score, making the program favor larger concentrations of high point colors
+  //   if (DEBUG) printf("(%d * %d)^1.5 = %f\n", sizes->at(currentSet), valOfColor, setEvaluation);
+    
+  //   // Checking if the set has elements in the goal zone
+  //   list<int> elements = d->Get_Elements()->at(currentSet);
+  //   int elementsInGoal = 0;
+    
+  //   if (DEBUG) printf("   Looking for elements in the goal. . .\n");
+  //   for (list<int>::iterator it = elements.begin(); it != elements.end(); it++) {
+  //     if (goals[*it]) {
+  //       if (DEBUG) printf("       Element %d is in the goal, adding to elementsInGoal.\n", *it);
+  //       elementsInGoal++;
+  //     }
+  //   }
+
+  //   if (DEBUG) printf("   Set %d had %d elements in the goal, weighting. . .\n", currentSet, elementsInGoal);
+  //   setEvaluation = setEvaluation + elementsInGoal * valOfColor;
+
+
+  //   // Checking if the set can be scored immediately
+  //   for (size_t j = 0; j < scoringCells.size(); j++) {    
+  //     if (d->Find(scoringCells[j]) == currentSet) {
+  //       if (DEBUG) printf("   Set %d can be scored, weighting the evaluation.\n", currentSet);
+  //       setEvaluation = setEvaluation * WEIGHT_FOR_SET_IN_GOAL;
+  //       break;
+  //     }
+  //   }
+
+  //   if (DEBUG) printf("   The set has evaluated to %f\n", setEvaluation);
+  //   score += setEvaluation;
+  // }
+
+  // if (DEBUG) printf("This board's score is %f\n\n", score);
+
+  // return score;
   
 }
 
+void Superball::printBoard(vector<int> mBoard) {
+  for (int i = 0; i < r; i++) {
+    for (int j = 0; j < c; j++) {
+      cout << (char)mBoard[i * c + j] << " ";
+    }
+    cout << endl;
+  }
+}
+
+vector<int> swap(int cellA, int cellB, vector<int> board) {    // Returns the copy of a board after a swap
+  int val = board[cellA];
+  board[cellA] = board[cellB];
+  board[cellB] = val;
+  return board;
+}
+
+void printBoard(vector<int> mBoard, int rows, int cols) {
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      cout << (char)mBoard[i * cols + j] << " ";
+    }
+    cout << endl;
+  }
+}
 
 int main(int argc, char **argv)
 {
+  bool DEBUG = true;
   Superball *s;
   int i, j;
   int ngoal;  // The number of pieces in goal cells
@@ -203,10 +348,51 @@ int main(int argc, char **argv)
       ngoal++;
     }
   }
+  // IF YOU HAVE LESS THAN 5 SQUARES LEFT ON THE BOARD, YOU WILL LOSE NEXT TURN
+  
+  vector<int> currentBoard = s->board;  // Putting this into memory so that when we start doing stuff with other
+  double currentScore = s->EvaluateBoard(currentBoard);
+  if (DEBUG) printf("\n\nThe current board has evaluated to %f\n", currentScore);
+
+  // Finding the best swap
+  vector<int> bestBoard = currentBoard;
+  double maxScore = currentScore; // Used for storing the best evaluate score
+  int cellA = 0;
+  int cellB = 0;            // Used for storing the best swap
+
+  for (i = 0; i < currentBoard.size(); i++) {
+    for (j = i + 1; j < currentBoard.size(); j++) {
+      if (currentBoard[i] == '.' || currentBoard[i] == '*' || currentBoard[j] == '.' || currentBoard[j] == '*') {
+        continue;
+      }
+
+      // if (DEBUG) printf("Evaluating swap(%d, %d)\n", i, j);
+
+      vector<int> newBoard = swap(i, j, currentBoard);
+      double newEvaluation = s->EvaluateBoard(newBoard);
+      if (newEvaluation > maxScore) {
+        if (DEBUG) printf(" A better score of %f has been found by swapping (%d) with (%d)\n", newEvaluation, i, j);
+        
+        bestBoard = newBoard;
+        maxScore = newEvaluation;
+        cellA = i;
+        cellB = j;
+      }
+    }
+  }
+
+  cout << endl;
+  printBoard(bestBoard, 8, 10);
+
+  cout << cellA << " " << cellB << endl;
+  printf("SWAP %d %d %d %d\n", cellA / s->c, cellA % s->c, cellB / s->c, cellB % s->c);
+
+  // s->ConstructDisjointsets();
+  // s->takenPaths.clear();
+  // s->takenPaths.resize(r*c);
+  // s->FindScoringCells();
 
   
-  s->ConstructDisjointsets();
-  s->FindScoringCells();
 
   // // Calculating the ouput
   // int currentSet;
@@ -215,8 +401,8 @@ int main(int argc, char **argv)
   // for (size_t i = 0; i < s->scoringCells.size(); i++) {
   //   // DEBUG cout << "scoringCell == " << s->scoringCells[i] << " ";
     
-  //   currentSet = s->d.Find(s->scoringCells[i]);
-  //   printf("  Size: %2d  Char: %c  Scoring Cell: %d,%d\n", s->d.Get_Sizes()->at(currentSet), s->board[currentSet], s->scoringCells[i] / s->c, s->scoringCells[i] % s->c);
+  //   currentSet = s->d->Find(s->scoringCells[i]);
+  //   printf("  Size: %2d  Char: %c  Scoring Cell: %d,%d\n", s->d->Get_Sizes()->at(currentSet), s->board[currentSet], s->scoringCells[i] / s->c, s->scoringCells[i] % s->c);
 
   // }
   

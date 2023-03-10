@@ -9,7 +9,7 @@ using plank::Disjoint_Set;
 
 class Superball {
   private:
-    bool DEBUG = false;
+    bool DEBUG = true;
   public:
     Disjoint_Set d;
     Superball(int argc, char **argv); // Populates the variables below with information from the commandline
@@ -203,7 +203,8 @@ int main(int argc, char **argv)
   }
 
   
-  s->ConstructDisjointsets();
+  s->ConstructDisjointsets().Print();
+  s->takenPaths.clear();  // Just to make sure that if I want to use ConstructDisjointsets() again, takenPaths is clean.
   s->FindScoringCells();
 
   // Calculating the ouput
